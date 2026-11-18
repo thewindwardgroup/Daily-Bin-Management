@@ -37,6 +37,7 @@
   .row.first{border-color:rgba(255,200,61,.55);box-shadow:0 0 0 1px rgba(255,200,61,.25),0 18px 50px -20px rgba(255,200,61,.35)}
   .rank{width:96px;height:96px;border-radius:50%;display:grid;place-items:center;
     font-size:58px;font-weight:800;color:#0b1a33;background:var(--dim);justify-self:center}
+  .rank sup{font-size:24px;margin-left:2px;vertical-align:28px}
   .r1 .rank{background:var(--gold)}.r2 .rank{background:var(--silver)}.r3 .rank{background:var(--bronze)}
   .store .nm{font-size:50px;font-weight:700;line-height:1}
   .store .id{white-space:nowrap;font-size:19px;color:var(--mute);margin-top:6px;letter-spacing:.06em}
@@ -69,7 +70,6 @@
   footer .sys b{color:var(--gold);font-weight:700}
   .crown{position:absolute;right:-30px;top:-30px;width:160px;height:160px;border-radius:50%;
     background:radial-gradient(circle,rgba(255,200,61,.22),transparent 70%)}
-  .msg{margin:auto;font-size:34px;color:var(--mute);text-align:center}
 </style>
 </head>
 <body>
@@ -85,29 +85,16 @@
       <div class="legend"><span><i style="background:var(--good)"></i>90%+</span><span><i style="background:var(--ok)"></i>80–89%</span><span><i style="background:var(--bad)"></i>Below 80%</span><span>- - - Zaxby's system avg</span></div>
     </div>
   </header>
-  <div id="board"><div class="msg">Loading scoreboard…</div></div>
+  <div id="board"></div>
   <footer>
     <div class="sys" id="sys"></div>
     <div id="updated"></div>
   </footer>
 </div>
+<script id="bin-data" type="application/json">{"days": [{"date": "11/11/2026", "dow": "Wednesday"}, {"date": "11/12/2026", "dow": "Thursday"}, {"date": "11/13/2026", "dow": "Friday"}, {"date": "11/14/2026", "dow": "Saturday"}, {"date": "11/15/2026", "dow": "Sunday"}, {"date": "11/16/2026", "dow": "Monday"}, {"date": "11/17/2026", "dow": "Tuesday"}], "stores": [{"id": "74394", "name": "Philadelphia", "overall": [0.931818181818182, 0.808510638297872, 0.958333333333333, 1.0, 0.976744186046512, 0.909090909090909, 0.931818181818182], "dayparts": [{"name": "Lunch", "vals": [0.916666666666667, 0.833333333333333, 0.916666666666667, 1.0, 1.0, 0.916666666666667, 0.916666666666667]}, {"name": "Afternoon Snack", "vals": [0.916666666666667, 0.833333333333333, 0.916666666666667, 0.916666666666667, 0.909090909090909, 1.0, 1.0]}, {"name": "Dinner", "vals": [1.0, 0.916666666666667, 1.0, 1.0, 1.0, 0.833333333333333, 0.833333333333333]}, {"name": "Evening Snack", "vals": [0.875, 0.636363636363636, 1.0, 1.0, 1.0, 0.875, 0.888888888888889]}]}, {"id": "74318", "name": "Pontotoc", "overall": [0.733333333333333, 0.818181818181818, 1.0, 0.851063829787234, 0.863636363636364, 0.755555555555556, 0.857142857142857], "dayparts": [{"name": "Lunch", "vals": [0.833333333333333, 1.0, 1.0, 0.833333333333333, 1.0, 0.833333333333333, 0.75]}, {"name": "Afternoon Snack", "vals": [0.75, 0.583333333333333, 1.0, 0.666666666666667, 0.833333333333333, 0.75, 0.727272727272727]}, {"name": "Dinner", "vals": [1.0, 0.75, 1.0, 0.916666666666667, 0.75, 0.75, 1.0]}, {"name": "Evening Snack", "vals": [0.222222222222222, 1.0, 1.0, 1.0, 0.875, 0.666666666666667, 1.0]}]}, {"id": "75041", "name": "Tupelo", "overall": [0.875, 0.844444444444444, 0.893617021276596, 0.837209302325581, 0.813953488372093, 0.883720930232558, 0.818181818181818], "dayparts": [{"name": "Lunch", "vals": [1.0, 0.916666666666667, 1.0, 0.909090909090909, 0.916666666666667, 1.0, 0.833333333333333]}, {"name": "Afternoon Snack", "vals": [0.833333333333333, 0.666666666666667, 0.916666666666667, 1.0, 0.818181818181818, 0.833333333333333, 0.833333333333333]}, {"name": "Dinner", "vals": [0.833333333333333, 0.916666666666667, 0.833333333333333, 0.727272727272727, 0.916666666666667, 0.833333333333333, 0.833333333333333]}, {"name": "Evening Snack", "vals": [0.8, 0.888888888888889, 0.818181818181818, 0.727272727272727, 0.5, 0.857142857142857, 0.75]}]}, {"id": "74538", "name": "Westpoint", "overall": [0.727272727272727, 0.977777777777778, 0.977777777777778, 0.895833333333333, 0.931818181818182, 0.767441860465116, 0.977272727272727], "dayparts": [{"name": "Lunch", "vals": [0.333333333333333, 1.0, 1.0, 0.75, 0.833333333333333, 0.833333333333333, 1.0]}, {"name": "Afternoon Snack", "vals": [0.75, 1.0, 1.0, 0.916666666666667, 1.0, 0.909090909090909, 1.0]}, {"name": "Dinner", "vals": [0.916666666666667, 1.0, 1.0, 1.0, 0.916666666666667, 0.666666666666667, 1.0]}, {"name": "Evening Snack", "vals": [1.0, 0.888888888888889, 0.888888888888889, 0.916666666666667, 1.0, 0.625, 0.875]}]}], "system": [0.820811945870275, 0.822390164367867, 0.826808340185103, 0.813914858274592, 0.816249050873197, 0.816514995292957, 0.814693202885926]}</script>
 <script>
 (function(){
-  function fit(){ var s=Math.min(innerWidth/1920, innerHeight/1080), st=document.getElementById('stage');
-    st.style.transform='translate('+((innerWidth-1920*s)/2)+'px,'+((innerHeight-1080*s)/2)+'px) scale('+s+')'; }
-  addEventListener('resize', fit); fit();
-  // reload every 30 minutes so a screen picks up the newest day without anyone touching it
-  setTimeout(function(){ location.reload(); }, 30*60*1000);
-
-  fetch('data.json?t=' + Date.now(), {cache:'no-store'})
-    .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
-    .then(render)
-    .catch(function(){
-      document.getElementById('board').innerHTML = '<div class="msg">Scoreboard data unavailable — retrying shortly.</div>';
-      setTimeout(function(){ location.reload(); }, 5*60*1000);
-    });
-
-  function render(D){
+  var D = JSON.parse(document.getElementById('bin-data').textContent);
   var L = D.days.length - 1;           // previous day = last column in the report
   var dpNames = [];
   D.stores.forEach(function(s){ s.dayparts.forEach(function(d){ if(dpNames.indexOf(d.name)<0) dpNames.push(d.name); }); });
@@ -117,6 +104,7 @@
   function pct(v){ return v==null ? '—' : Math.round(v*1000)/10 + '%'; }
   function pctBig(v){ return v==null ? '—' : (Math.round(v*1000)/10).toFixed(1) + '<span style="font-size:.5em">%</span>'; }
   function cls(v){ return v==null ? 'na' : v>=0.9 ? 'g' : v>=0.8 ? 'o' : 'b'; }
+  function ord(n){ var s=['th','st','nd','rd'], v=n%100; return n+(s[(v-20)%10]||s[v]||s[0]); }
   function el(tag, c, html){ var e=document.createElement(tag); if(c) e.className=c; if(html!=null) e.innerHTML=html; return e; }
   function esc(t){ var d=document.createElement('div'); d.textContent=t; return d.innerHTML; }
 
@@ -143,7 +131,6 @@
     '<path d="M18 33c-1.5 3-3 5-3 7a3 3 0 0 0 6 0c0-2-1.5-4-3-7z" fill="#7cc8ff"/></svg>';
   var lastRank = Math.max.apply(null, list.map(function(x){return x.rank;}));
   var board = document.getElementById('board');
-  board.innerHTML = '';
   var head = el('div','colhead');
   ['Rank','Location','Overall'].concat(dpNames).concat(['7-Day Trend']).forEach(function(t){ head.appendChild(el('div',null,esc(t))); });
   board.appendChild(head);
@@ -162,7 +149,7 @@
     st.appendChild(tx); row.appendChild(st);
 
     var ov=el('div','overall'); var cur=s.overall[L], prev=L>0?s.overall[L-1]:null;
-    var v=el('div','v cond'); v.innerHTML=pctBig(cur);
+    var v=el('div','v cond '+cls(cur)); v.innerHTML=pctBig(cur); v.style.background='none'; v.style.border='0';
     v.style.color = cur==null?'var(--dim)':cur>=0.9?'var(--good)':cur>=0.8?'var(--ok)':'var(--bad)';
     ov.appendChild(v);
     if(cur!=null && prev!=null){
@@ -203,7 +190,12 @@
   var gAvg = avgW.reduce(function(a,x){return a+x.v;},0)/Math.max(1,avgW.length);
   document.getElementById('sys').innerHTML = 'Windward average <b>'+pct(gAvg)+'</b> &nbsp;·&nbsp; Zaxby\'s system average <b>'+pct(sv)+'</b>';
   document.getElementById('updated').textContent = 'Source: ReportHub "Windward Bin %" · Data for ' + day.date;
-  }
+
+  function fit(){ var s=Math.min(innerWidth/1920, innerHeight/1080), st=document.getElementById('stage');
+    st.style.transform='translate('+((innerWidth-1920*s)/2)+'px,'+((innerHeight-1080*s)/2)+'px) scale('+s+')'; }
+  addEventListener('resize', fit); fit();
+  // reload every 30 minutes so a screen picks up the newest day without anyone touching it
+  setTimeout(function(){ location.reload(); }, 30*60*1000);
 })();
 </script>
 </body>

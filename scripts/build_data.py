@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-"""Convert the ReportHub "Windward Bin %" workbook into data.json for the scoreboard.
+"""Refresh the bin scoreboard (index.html) from the ReportHub "Windward Bin %" workbook.
 
-Usage: python3 scripts/build_data.py path/to/BinDroppedActual.xlsx [out=data.json]
+Only the <script id="bin-data"> JSON block in index.html is replaced; the page itself is untouched.
+
+Usage: python3 scripts/build_data.py path/to/BinDroppedActual.xlsx [page=index.html]
 """
 import json
 import re
 import sys
-from datetime import datetime, timezone
 
 import openpyxl
 
@@ -20,7 +21,7 @@ def num(v):
         return None
 
 
-def main(src, out="data.json"):
+def parse(src):
     ws = openpyxl.load_workbook(src, data_only=True).worksheets[0]
     rows = list(ws.iter_rows(values_only=True))
     header = rows[0]
@@ -56,16 +57,26 @@ def main(src, out="data.json"):
 
     if not stores:
         raise SystemExit("No stores found in the report")
+    return {"days": days, "stores": stores, "system": system}
 
-    data = {
-        "days": days,
-        "stores": stores,
-        "system": system,
-        "generated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-    }
-    with open(out, "w") as f:
-        json.dump(data, f, indent=1)
-    print(f"Wrote {out}: {len(stores)} stores, latest day {days[-1]['date']} ({days[-1]['dow']})")
+
+def embed(page, block_id, text):
+    html = open(page, encoding="utf-8").read()
+    pat = re.compile(r'(<script id="' + block_id + r'" type="application/json">)(.*?)(</script>)', re.S)
+    if not pat.search(html):
+        raise SystemExit(f'No <script id="{block_id}"> block in {page}')
+    if "</" in text:
+        raise SystemExit("Data contains '</' and can't be embedded safely")
+    html = pat.sub(lambda m: m.group(1) + text + m.group(3), html, count=1)
+    with open(page, "w", encoding="utf-8") as f:
+        f.write(html)
+
+
+def main(src, page="index.html"):
+    data = parse(src)
+    embed(page, "bin-data", json.dumps(data))
+    d = data["days"][-1]
+    print(f"Updated {page}: {len(data['stores'])} stores, latest day {d['date']} ({d['dow']})")
 
 
 if __name__ == "__main__":

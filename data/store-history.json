@@ -1,0 +1,54 @@
+{
+ "11/16/2026": {
+  "75041": {
+   "name": "Tupelo",
+   "sales": 3872.21,
+   "orders": 263,
+   "hours": 123.33
+  },
+  "74538": {
+   "name": "West Point",
+   "sales": 5341.69,
+   "orders": 394,
+   "hours": 103.28
+  },
+  "74394": {
+   "name": "Philadelphia",
+   "sales": 6241.51,
+   "orders": 366,
+   "hours": 107.45
+  },
+  "74318": {
+   "name": "Pontotoc",
+   "sales": 5957.02,
+   "orders": 371,
+   "hours": 99.37
+  }
+ },
+ "11/17/2026": {
+  "74538": {
+   "name": "West Point",
+   "sales": 4988.18,
+   "orders": 358,
+   "hours": 123.28
+  },
+  "74318": {
+   "name": "Pontotoc",
+   "sales": 5808.7,
+   "orders": 362,
+   "hours": 128.92
+  },
+  "74394": {
+   "name": "Philadelphia",
+   "sales": 7488.21,
+   "orders": 383,
+   "hours": 102.6
+  },
+  "75041": {
+   "name": "Tupelo",
+   "sales": 3887.94,
+   "orders": 248,
+   "hours": 103.38
+  }
+ }
+}
