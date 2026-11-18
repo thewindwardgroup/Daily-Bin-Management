@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Windward Bin Management Scoreboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#06142b; --panel:#0c2142; --panel2:#11294f; --line:#1d3a66;
+    --ink:#f4f7fb; --mute:#8fa3c2; --dim:#5d7398;
+    --good:#2fd17a; --ok:#f5b83d; --bad:#ff5a5f; --gold:#ffc83d; --silver:#cfd8e6; --bronze:#e0915a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:100%;height:100%;background:var(--bg);overflow:hidden}
+  body{font-family:Inter,system-ui,sans-serif;color:var(--ink)}
+  #stage{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;
+    padding:44px 56px 36px;display:flex;flex-direction:column;gap:26px;
+    background:radial-gradient(1200px 600px at 85% -10%,#173a73 0%,transparent 60%),var(--bg)}
+  .cond{font-family:"Barlow Condensed",Inter,sans-serif}
+  header{display:flex;align-items:flex-end;justify-content:space-between}
+  .eyebrow{font-size:22px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:700}
+  h1{font-size:74px;line-height:1;font-weight:800;letter-spacing:.01em;margin-top:6px}
+  .when{text-align:right}
+  .when .d{font-size:52px;font-weight:700;line-height:1}
+  .when .s{font-size:22px;color:var(--mute);margin-top:6px}
+  .legend{display:flex;gap:22px;font-size:19px;color:var(--mute);justify-content:flex-end;margin-top:10px}
+  .legend i{display:inline-block;width:14px;height:14px;border-radius:4px;margin-right:8px;vertical-align:-1px}
+  #board{flex:1;display:flex;flex-direction:column;gap:16px;min-height:0}
+  .colhead{display:grid;grid-template-columns:var(--cols);gap:16px;padding:0 24px;
+    font-size:20px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);font-weight:600}
+  .colhead div{text-align:center}.colhead div:nth-child(2){text-align:left}
+  .row{flex:1;display:grid;grid-template-columns:var(--cols);gap:16px;align-items:center;
+    background:linear-gradient(90deg,var(--panel2),var(--panel));border:1px solid var(--line);
+    border-radius:22px;padding:0 24px;position:relative;overflow:hidden;min-height:0}
+  .row.first{border-color:rgba(255,200,61,.55);box-shadow:0 0 0 1px rgba(255,200,61,.25),0 18px 50px -20px rgba(255,200,61,.35)}
+  .rank{width:96px;height:96px;border-radius:50%;display:grid;place-items:center;
+    font-size:58px;font-weight:800;color:#0b1a33;background:var(--dim);justify-self:center}
+  .r1 .rank{background:var(--gold)}.r2 .rank{background:var(--silver)}.r3 .rank{background:var(--bronze)}
+  .store .nm{font-size:50px;font-weight:700;line-height:1}
+  .store .id{white-space:nowrap;font-size:19px;color:var(--mute);margin-top:6px;letter-spacing:.06em}
+  .overall{text-align:center}
+  .overall .v{font-size:76px;font-weight:800;line-height:.95}
+  .overall .chg{font-size:21px;font-weight:600;margin-top:4px}
+  .up{color:var(--good)}.down{color:var(--bad)}.flat{color:var(--mute)}
+  .dp{height:78%;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    border:1px solid transparent}
+  .dp .v{font-size:52px;font-weight:700;line-height:1}
+  .dp .bar{width:72%;height:8px;border-radius:4px;background:rgba(255,255,255,.12);margin-top:10px;overflow:hidden}
+  .dp .bar b{display:block;height:100%;border-radius:4px}
+  .g{background:rgba(47,209,122,.13);border-color:rgba(47,209,122,.35)}.g .v{color:var(--good)}.g .bar b{background:var(--good)}
+  .o{background:rgba(245,184,61,.13);border-color:rgba(245,184,61,.35)}.o .v{color:var(--ok)}.o .bar b{background:var(--ok)}
+  .b{background:rgba(255,90,95,.14);border-color:rgba(255,90,95,.4)}.b .v{color:var(--bad)}.b .bar b{background:var(--bad)}
+  .na{background:rgba(255,255,255,.04)}.na .v{color:var(--dim)}
+  .trend{display:flex;flex-direction:column;align-items:center}
+  .trend svg{display:block}
+  .trend .cap{font-size:17px;color:var(--mute);margin-top:4px}
+  .store{display:flex;align-items:center;gap:14px;min-width:0}
+  .store .txt{min-width:0}
+  .badge{flex:none;width:68px;height:68px;display:block}
+  .row.last{border-color:rgba(255,90,95,.5)}
+  .tag{display:inline-block;font-size:17px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+    padding:3px 10px;border-radius:6px;margin-left:12px;vertical-align:2px;white-space:nowrap}
+  .tag.win{background:rgba(255,200,61,.18);color:var(--gold)}
+  .tag.lose{background:rgba(255,90,95,.18);color:var(--bad)}
+  footer{display:flex;justify-content:space-between;align-items:center;font-size:20px;color:var(--mute)}
+  footer .sys{font-size:24px;color:var(--ink)}
+  footer .sys b{color:var(--gold);font-weight:700}
+  .crown{position:absolute;right:-30px;top:-30px;width:160px;height:160px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,200,61,.22),transparent 70%)}
+  .msg{margin:auto;font-size:34px;color:var(--mute);text-align:center}
+</style>
+</head>
+<body>
+<div id="stage">
+  <header>
+    <div>
+      <div class="eyebrow">Windward Group · Bin Management</div>
+      <h1 class="cond">YESTERDAY'S SCOREBOARD</h1>
+    </div>
+    <div class="when">
+      <div class="d cond" id="dateMain"></div>
+      <div class="s">Ranked by Actual Dropped % — higher is better</div>
+      <div class="legend"><span><i style="background:var(--good)"></i>90%+</span><span><i style="background:var(--ok)"></i>80–89%</span><span><i style="background:var(--bad)"></i>Below 80%</span><span>- - - Zaxby's system avg</span></div>
+    </div>
+  </header>
+  <div id="board"><div class="msg">Loading scoreboard…</div></div>
+  <footer>
+    <div class="sys" id="sys"></div>
+    <div id="updated"></div>
+  </footer>
+</div>
+<script>
+(function(){
+  function fit(){ var s=Math.min(innerWidth/1920, innerHeight/1080), st=document.getElementById('stage');
+    st.style.transform='translate('+((innerWidth-1920*s)/2)+'px,'+((innerHeight-1080*s)/2)+'px) scale('+s+')'; }
+  addEventListener('resize', fit); fit();
+  // reload every 30 minutes so a screen picks up the newest day without anyone touching it
+  setTimeout(function(){ location.reload(); }, 30*60*1000);
+
+  fetch('data.json?t=' + Date.now(), {cache:'no-store'})
+    .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+    .then(render)
+    .catch(function(){
+      document.getElementById('board').innerHTML = '<div class="msg">Scoreboard data unavailable — retrying shortly.</div>';
+      setTimeout(function(){ location.reload(); }, 5*60*1000);
+    });
+
+  function render(D){
+  var L = D.days.length - 1;           // previous day = last column in the report
+  var dpNames = [];
+  D.stores.forEach(function(s){ s.dayparts.forEach(function(d){ if(dpNames.indexOf(d.name)<0) dpNames.push(d.name); }); });
+  var cols = '130px minmax(0,2.05fr) minmax(0,1.15fr) ' + dpNames.map(function(){return 'minmax(0,1fr)';}).join(' ') + ' 250px';
+  document.getElementById('stage').style.setProperty('--cols', cols);
+
+  function pct(v){ return v==null ? '—' : Math.round(v*1000)/10 + '%'; }
+  function pctBig(v){ return v==null ? '—' : (Math.round(v*1000)/10).toFixed(1) + '<span style="font-size:.5em">%</span>'; }
+  function cls(v){ return v==null ? 'na' : v>=0.9 ? 'g' : v>=0.8 ? 'o' : 'b'; }
+  function el(tag, c, html){ var e=document.createElement(tag); if(c) e.className=c; if(html!=null) e.innerHTML=html; return e; }
+  function esc(t){ var d=document.createElement('div'); d.textContent=t; return d.innerHTML; }
+
+  var day = D.days[L];
+  var dt = new Date(day.date);
+  document.getElementById('dateMain').textContent =
+    dt.toLocaleDateString('en-US',{weekday:'long', month:'long', day:'numeric'});
+
+  // rank: highest overall first; ties share a rank
+  var list = D.stores.map(function(s){ return {s:s, v:s.overall[L]}; })
+    .sort(function(a,b){ return (b.v==null?-1:b.v) - (a.v==null?-1:a.v); });
+  var prevV=null, prevR=0;
+  list.forEach(function(x,i){ x.rank = (x.v!==null && x.v===prevV) ? prevR : i+1; prevV=x.v; prevR=x.rank; });
+
+  var TROPHY='<svg class="badge" viewBox="0 0 64 64"><defs><linearGradient id="tg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe17a"/><stop offset="1" stop-color="#f0a500"/></linearGradient></defs>'+
+    '<path d="M18 10h28v14c0 9-6 16-14 16s-14-7-14-16z" fill="url(#tg)"/>'+
+    '<path d="M18 14H9c0 9 4 14 11 15M46 14h9c0 9-4 14-11 15" fill="none" stroke="#f5b83d" stroke-width="4" stroke-linecap="round"/>'+
+    '<rect x="28" y="39" width="8" height="9" fill="#e09a00"/><rect x="20" y="47" width="24" height="7" rx="2" fill="#f5b83d"/>'+
+    '<rect x="16" y="53" width="32" height="5" rx="2" fill="#c98300"/>'+
+    '<path d="M32 16l2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z" fill="#fff6d6"/></svg>';
+  var SAD='<svg class="badge" viewBox="0 0 64 64"><circle cx="32" cy="32" r="28" fill="#ff5a5f"/><circle cx="32" cy="32" r="28" fill="none" stroke="#ffb3b5" stroke-width="2" opacity=".5"/>'+
+    '<ellipse cx="22.5" cy="26" rx="4" ry="5" fill="#2a0a12"/><ellipse cx="41.5" cy="26" rx="4" ry="5" fill="#2a0a12"/>'+
+    '<path d="M20 47c3.5-7 20.5-7 24 0" fill="none" stroke="#2a0a12" stroke-width="4" stroke-linecap="round"/>'+
+    '<path d="M18 33c-1.5 3-3 5-3 7a3 3 0 0 0 6 0c0-2-1.5-4-3-7z" fill="#7cc8ff"/></svg>';
+  var lastRank = Math.max.apply(null, list.map(function(x){return x.rank;}));
+  var board = document.getElementById('board');
+  board.innerHTML = '';
+  var head = el('div','colhead');
+  ['Rank','Location','Overall'].concat(dpNames).concat(['7-Day Trend']).forEach(function(t){ head.appendChild(el('div',null,esc(t))); });
+  board.appendChild(head);
+
+  list.forEach(function(x){
+    var s=x.s, row=el('div','row r'+x.rank+(x.rank===1?' first':''));
+    if(x.rank===1) row.appendChild(el('div','crown'));
+    row.appendChild(el('div','rank cond', String(x.rank)));
+    var isFirst = x.rank===1, isLast = list.length>1 && x.rank===lastRank && !isFirst;
+    if(isLast) row.className += ' last';
+    var st=el('div','store');
+    if(isFirst) st.appendChild(el('div',null,TROPHY));
+    if(isLast) st.appendChild(el('div',null,SAD));
+    var tx=el('div','txt'); tx.appendChild(el('div','nm cond',esc(s.name)));
+    tx.appendChild(el('div','id','Store #'+esc(s.id)+(isFirst?'<span class="tag win">Top store</span>':isLast?'<span class="tag lose">Needs work</span>':'')));
+    st.appendChild(tx); row.appendChild(st);
+
+    var ov=el('div','overall'); var cur=s.overall[L], prev=L>0?s.overall[L-1]:null;
+    var v=el('div','v cond'); v.innerHTML=pctBig(cur);
+    v.style.color = cur==null?'var(--dim)':cur>=0.9?'var(--good)':cur>=0.8?'var(--ok)':'var(--bad)';
+    ov.appendChild(v);
+    if(cur!=null && prev!=null){
+      var dlt=Math.round((cur-prev)*1000)/10, c=dlt>0?'up':dlt<0?'down':'flat';
+      ov.appendChild(el('div','chg '+c,(dlt>0?'▲ ':dlt<0?'▼ ':'● ')+Math.abs(dlt).toFixed(1)+' pts vs '+esc(D.days[L-1].dow.slice(0,3))));
+    }
+    row.appendChild(ov);
+
+    dpNames.forEach(function(n){
+      var d=s.dayparts.filter(function(p){return p.name===n;})[0], val=d?d.vals[L]:null;
+      var box=el('div','dp '+cls(val));
+      box.appendChild(el('div','v cond',pct(val)));
+      var bar=el('div','bar'), b=el('b'); b.style.width=(val==null?0:Math.max(0,Math.min(1,val))*100)+'%'; bar.appendChild(b); box.appendChild(bar);
+      row.appendChild(box);
+    });
+
+    // sparkline of last 7 days overall vs system avg
+    var w=230,h=86,p=8, vals=s.overall, sys=D.system||[];
+    var lo=0.5, hi=1.0;
+    function X(i){ return p + i*(w-2*p)/Math.max(1,vals.length-1); }
+    function Y(v){ return h-p - (Math.max(lo,Math.min(hi,v))-lo)/(hi-lo)*(h-2*p); }
+    var line='', sysl='';
+    vals.forEach(function(v,i){ if(v!=null) line+=(line?'L':'M')+X(i).toFixed(1)+','+Y(v).toFixed(1); });
+    sys.forEach(function(v,i){ if(v!=null) sysl+=(sysl?'L':'M')+X(i).toFixed(1)+','+Y(v).toFixed(1); });
+    var lastC = cur==null?'#5d7398':cur>=0.9?'#2fd17a':cur>=0.8?'#f5b83d':'#ff5a5f';
+    var svg='<svg width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'">'+
+      '<path d="'+sysl+'" fill="none" stroke="#8fa3c2" stroke-width="2" stroke-dasharray="5 5" opacity=".6"/>'+
+      '<path d="'+line+'" fill="none" stroke="#f4f7fb" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>'+
+      (cur!=null?'<circle cx="'+X(L)+'" cy="'+Y(cur)+'" r="7" fill="'+lastC+'" stroke="#06142b" stroke-width="3"/>':'')+'</svg>';
+    var tr=el('div','trend',svg);
+    tr.appendChild(el('div','cap',esc(D.days[0].dow.slice(0,3))+' → '+esc(D.days[L].dow.slice(0,3))));
+    row.appendChild(tr);
+    board.appendChild(row);
+  });
+
+  var sv = D.system ? D.system[L] : null;
+  var avgW = list.filter(function(x){return x.v!=null;});
+  var gAvg = avgW.reduce(function(a,x){return a+x.v;},0)/Math.max(1,avgW.length);
+  document.getElementById('sys').innerHTML = 'Windward average <b>'+pct(gAvg)+'</b> &nbsp;·&nbsp; Zaxby\'s system average <b>'+pct(sv)+'</b>';
+  document.getElementById('updated').textContent = 'Source: ReportHub "Windward Bin %" · Data for ' + day.date;
+  }
+})();
+</script>
+</body>
+</html>
