@@ -50,5 +50,31 @@
    "orders": 248,
    "hours": 103.38
   }
+ },
+ "11/18/2026": {
+  "74394": {
+   "name": "Philadelphia",
+   "sales": 5738.36,
+   "orders": 362,
+   "hours": 115.17
+  },
+  "74318": {
+   "name": "Pontotoc",
+   "sales": 6216.97,
+   "orders": 389,
+   "hours": 117.9
+  },
+  "75041": {
+   "name": "Tupelo",
+   "sales": 5440.1,
+   "orders": 301,
+   "hours": 120.9
+  },
+  "74538": {
+   "name": "West Point",
+   "sales": 6368.43,
+   "orders": 430,
+   "hours": 114.35
+  }
  }
 }
